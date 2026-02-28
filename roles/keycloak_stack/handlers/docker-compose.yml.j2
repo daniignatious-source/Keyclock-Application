@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: {{ keycloak_db_name }}
+      POSTGRES_USER: {{ keycloak_db_user }}
+      POSTGRES_PASSWORD: {{ keycloak_db_password }}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    command: start --optimized
+    restart: always
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_USERNAME: {{ keycloak_db_user }}
+      KC_DB_PASSWORD: {{ keycloak_db_password }}
+      KEYCLOAK_ADMIN: {{ keycloak_admin_user }}
+      KEYCLOAK_ADMIN_PASSWORD: {{ keycloak_admin_password }}
+      KC_HOSTNAME: {{ keycloak_hostname }}
+    depends_on:
+      - postgres
+    networks:
+      - internal
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - keycloak
+    networks:
+      - internal
+
+volumes:
+  postgres_data:
+
+networks:
+  internal:
+    driver: bridge
