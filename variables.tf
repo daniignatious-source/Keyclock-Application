@@ -1,17 +1,28 @@
-variable "resource_group_location" {
+variable "location" {
+  description = "Azure region"
   type        = string
-  default     = "eastus"
-  description = "Location of the resource group."
+  default     = "westeurope"
 }
 
-variable "resource_group_name_prefix" {
+variable "resource_group_name" {
+  description = "Resource group name"
   type        = string
-  default     = "rg"
-  description = "Prefix of the resource group name that's combined with a random ID so name is unique in your Azure subscription."
+  default     = "rg-keycloak-demo"
 }
 
-variable "username" {
+variable "vm_name" {
+  description = "VM name"
   type        = string
-  description = "The username for the local account that will be created on the new VM."
-  default     = "azureadmin"
+  default     = "vm-keycloak"
+}
+
+variable "admin_username" {
+  description = "Admin username"
+  type        = string
+  default     = "azureuser"
+}
+
+variable "ssh_public_key" {
+  description = "SSH public key"
+  type        = string
 }
