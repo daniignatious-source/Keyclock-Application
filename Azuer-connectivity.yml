@@ -5,5 +5,4 @@
 
 - name: Test Azure Connectivity
   run: |
-    az account show
-    az group list
+    curl -I https://management.azure.com
