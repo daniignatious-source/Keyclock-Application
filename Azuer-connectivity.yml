@@ -1,0 +1,9 @@
+- name: Azure Login
+  uses: azure/login@v1
+  with:
+    creds: ${{ secrets.Terraform-SA }}
+
+- name: Test Azure Connectivity
+  run: |
+    az account show
+    az group list
