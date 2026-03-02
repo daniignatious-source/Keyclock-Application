@@ -4,6 +4,8 @@ with:
   creds: ${{ secrets.Terraform_SA }}
 
 
+
+
 name: Test Azure Connectivity
 run: |
   curl -I https://management.azure.com
