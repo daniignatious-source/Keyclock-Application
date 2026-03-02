@@ -1,9 +1,5 @@
 name: Terraform Test
 
-on:
-  push:
-    branches:
-      - main
 
 jobs:
   deploy:
