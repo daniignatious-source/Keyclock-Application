@@ -1,6 +1,6 @@
 name: Deploy to Azure
 
-on:
+'on':
   push:
     branches: [ main ]
 
