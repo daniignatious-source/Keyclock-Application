@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./Terraform   # <-- change to your folder
+        working-directory: ./terraform   # <-- change to your folder
 
     steps:
       - name: Checkout
