@@ -2,12 +2,14 @@ name: Deploy to Azure
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Terraform   # <-- change to your folder
 
     steps:
       - name: Checkout
@@ -17,9 +19,15 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.Terraform_SA }}
-          
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+
+      - name: Show files (debug)
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 2 -name "*.tf"
 
       - name: Terraform Init
         run: terraform init
@@ -29,13 +37,6 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
-        
+
       - name: Terraform Apply
         run: terraform apply -auto-approve
-
-      - name: Terraform destroy
-        run: terraform destroy -auto-approve 
-
-        
-        
-        
