@@ -1,7 +1,6 @@
-
 name: Deploy to Azure
 
-'on':
+on:
   push:
     branches: [ main ]
 
@@ -10,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./terraform   # <-- change to your folder
+        working-directory: ./terraform
 
     steps:
       - name: Checkout
@@ -38,12 +37,16 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
-        env: TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA}}
+        env:
+          TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        env:
+          TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA }}
 
-      - name: Terraform destroy
-        run: terraform destroy -auto-approve 
-      
-        
+      # Remove this if you want to keep the VM
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        env:
+          TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA }}
