@@ -38,8 +38,7 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
-        env:
-        TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA}}
+        env: TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA}}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
