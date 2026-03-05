@@ -1,4 +1,4 @@
-variable "location" { default = "northeurope" }
+variable "location" { default = "germanywestcentral" }
 variable "resource_group_name" { default = "rg-tf-vm" }
 variable "vm_name" { default = "tf-ubuntu-vm" }
 variable "admin_username" { default = "azureuser" }
