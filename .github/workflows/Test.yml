@@ -38,12 +38,12 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
         env:
-          TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA }}
+          TF_VAR_ssh_public_key: ${{ secrets.AZURE_KEY }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
         env:
-          TF_VAR_ssh_public_key: ${{ secrets.AZURE_RSA }}
+          TF_VAR_ssh_public_key: ${{ secrets.AZURE_KEY }}
 
       # Remove this if you want to keep the VM
       - name: Terraform Destroy
