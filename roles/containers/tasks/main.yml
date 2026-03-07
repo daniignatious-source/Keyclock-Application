@@ -1,0 +1,14 @@
+- name: Create directory
+  file:
+    path: /opt/keycloak
+    state: directory
+
+- name: Copy docker compose
+  copy:
+    src: docker-compose.yml
+    dest: /opt/keycloak/docker-compose.yml
+
+- name: Run containers
+  command: docker compose up -d
+  args:
+    chdir: /opt/keycloak
