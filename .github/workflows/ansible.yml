@@ -42,3 +42,4 @@ jobs:
           -u "azureuser" \
           --private-key ~/.ssh/id_rsa
           --ssh-common-args='-o StrictHostKeyChecking=no'
+          
