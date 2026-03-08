@@ -9,7 +9,6 @@ jobs:
 deploy:
 runs-on: ubuntu-latest
 
-```
 steps:
 
   - name: Checkout repository
@@ -36,5 +35,5 @@ steps:
       -i "${{ secrets.VM_HOST }}," \
       -u ${{ secrets.VM_USER }} \
       --private-key ~/.ssh/id_rsa
-```
+
 
