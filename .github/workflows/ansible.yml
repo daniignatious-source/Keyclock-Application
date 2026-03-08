@@ -32,6 +32,11 @@ jobs:
         run: |
           ssh-keyscan -H "20.165.186.196" >> ~/.ssh/known_hosts
 
+      - name: Test SSH connection
+        run: |
+         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no azureuser@20.165.186.196 "echo SSH connection successful"
+
+
       - name: Wait for SSH
         run: sleep 30
 
