@@ -21,7 +21,7 @@ jobs:
         id: login
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.Terraform_SA }}
+          creds: ${{ secrets.IAM_PRIVATE }}
 
       - name: Test Azure Connection
         run: |
@@ -68,7 +68,7 @@ jobs:
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.VM_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.IAM_PRIVATE }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Run Ansible Playbook
