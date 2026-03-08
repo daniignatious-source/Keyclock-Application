@@ -66,6 +66,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
 
       # 11. Run Ansible Playbook
+      
       - name: Run Ansible Playbook
         run: |
           ansible-playbook ansible/playbook.yml \
