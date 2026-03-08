@@ -1,4 +1,4 @@
-- hosts: azure_vm
+- hosts: tf-ubuntu-vm
   become: yes
 
   roles:
