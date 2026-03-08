@@ -1,8 +1,13 @@
 name: Deploy to Azure
 
+on:
+push:
+branches: [ main ]
+
 jobs:
 deploy:
 runs-on: ubuntu-latest
+
 ```
 defaults:
   run:
@@ -42,25 +47,23 @@ steps:
     env:
       TF_VAR_ssh_public_key: ${{ secrets.AZURE_KEY }}
 
-  # Switch directory for Ansible
-  - name: Change working directory
-    run: cd ..
-    working-directory: .
-
   - name: Install Ansible
     run: |
       sudo apt update
       sudo apt install -y ansible
+    working-directory: .
 
   - name: Setup SSH key
     run: |
       mkdir -p ~/.ssh
       echo "${{ secrets.IAM_PRIVATE }}" > ~/.ssh/id_rsa
       chmod 600 ~/.ssh/id_rsa
+    working-directory: .
 
   - name: Add server to known hosts
     run: |
       ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+    working-directory: .
 
   - name: Run Ansible Playbook
     run: |
@@ -69,4 +72,4 @@ steps:
       -u ${{ secrets.VM_USER }} \
       --private-key ~/.ssh/id_rsa
     working-directory: .
-    
+```
