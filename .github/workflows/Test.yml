@@ -2,7 +2,8 @@ name: Deploy to Azure
 
 on:
 push:
-branches: [ main ]
+branches:
+- main
 
 jobs:
 deploy:
@@ -24,12 +25,6 @@ steps:
 
   - name: Setup Terraform
     uses: hashicorp/setup-terraform@v3
-
-  - name: Show files (debug)
-    run: |
-      pwd
-      ls -la
-      find . -maxdepth 2 -name "*.tf"
 
   - name: Terraform Init
     run: terraform init
