@@ -1,5 +1,5 @@
 ---
-- name: Setup container environment on Azure VM
+- name: Deploy container environment with Keycloak and Postgres
   hosts: webservers
   become: yes
   vars:
@@ -10,14 +10,17 @@
     keycloak_admin_password: admin
   tasks:
 
-    # 1. Install Docker
-    - name: Install Docker
+    # 1️⃣ Install Docker
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker and docker-compose
       apt:
         name:
           - docker.io
           - docker-compose
         state: present
-        update_cache: yes
 
     - name: Ensure Docker service is running
       service:
@@ -25,7 +28,7 @@
         state: started
         enabled: yes
 
-    # 2. Deploy Postgres container
+    # 2️⃣ Deploy Postgres container
     - name: Run Postgres container
       community.docker.docker_container:
         name: postgres
@@ -38,7 +41,7 @@
           - "5432:5432"
         restart_policy: always
 
-    # 3. Deploy Keycloak container
+    # 3️⃣ Deploy Keycloak container
     - name: Run Keycloak container
       community.docker.docker_container:
         name: keycloak
@@ -58,8 +61,8 @@
           - postgres
         restart_policy: always
 
-    # 4. Deploy Nginx container
-    - name: Copy static web page
+    # 4️⃣ Deploy Nginx container with static page
+    - name: Copy static web page to VM
       copy:
         src: site/index.html
         dest: /tmp/index.html
@@ -73,4 +76,3 @@
         volumes:
           - /tmp/index.html:/usr/share/nginx/html/index.html:ro
         restart_policy: always
-        
