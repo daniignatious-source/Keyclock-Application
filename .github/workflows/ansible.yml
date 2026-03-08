@@ -13,10 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Ansible
+      - name: Install Ansible and Python dependencies
         run: |
           sudo apt update
-          sudo apt install -y ansible
+          sudo apt install -y ansible python3-pip
+
+      - name: Install Ansible Docker collection
+        run: |
+          ansible-galaxy collection install community.docker
 
       - name: Setup SSH key
         run: |
@@ -26,7 +30,7 @@ jobs:
 
       - name: Add server to known hosts
         run: |
-          ssh-keyscan -H 20.165.186.196 >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
 
       - name: Wait for SSH
         run: sleep 30
@@ -37,12 +41,3 @@ jobs:
           -i "${{ secrets.VM_HOST }}," \
           -u ${{ secrets.VM_USER }} \
           --private-key ~/.ssh/id_rsa
-
-          - name: Install Ansible
-  run: |
-    sudo apt update
-    sudo apt install -y ansible python3-pip
-
-- name: Install Docker collection
-  run: |
-    ansible-galaxy collection install community.docker
