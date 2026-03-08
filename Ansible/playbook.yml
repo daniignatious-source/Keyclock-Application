@@ -1,4 +1,3 @@
----
 - name: Deploy container environment with Keycloak and Postgres
   hosts: all
   become: yes
