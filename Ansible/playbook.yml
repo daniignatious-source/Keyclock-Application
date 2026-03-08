@@ -1,7 +1,75 @@
-- hosts: azure_vm
+---
+- name: Setup container environment on Azure VM
+  hosts: webservers
   become: yes
+  vars:
+    postgres_user: keycloak
+    postgres_password: secret
+    postgres_db: keycloak
+    keycloak_admin_user: admin
+    keycloak_admin_password: admin
+  tasks:
 
-  roles:
-    - docker
-    - containers
-    
+    # 1. Install Docker
+    - name: Install Docker
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    # 2. Deploy Postgres container
+    - name: Run Postgres container
+      community.docker.docker_container:
+        name: postgres
+        image: postgres:15
+        env:
+          POSTGRES_USER: "{{ postgres_user }}"
+          POSTGRES_PASSWORD: "{{ postgres_password }}"
+          POSTGRES_DB: "{{ postgres_db }}"
+        ports:
+          - "5432:5432"
+        restart_policy: always
+
+    # 3. Deploy Keycloak container
+    - name: Run Keycloak container
+      community.docker.docker_container:
+        name: keycloak
+        image: quay.io/keycloak/keycloak:21.0.1
+        command: start-dev
+        env:
+          DB_VENDOR: POSTGRES
+          DB_ADDR: postgres
+          DB_DATABASE: "{{ postgres_db }}"
+          DB_USER: "{{ postgres_user }}"
+          DB_PASSWORD: "{{ postgres_password }}"
+          KEYCLOAK_ADMIN: "{{ keycloak_admin_user }}"
+          KEYCLOAK_ADMIN_PASSWORD: "{{ keycloak_admin_password }}"
+        ports:
+          - "8080:8080"
+        links:
+          - postgres
+        restart_policy: always
+
+    # 4. Deploy Nginx container
+    - name: Copy static web page
+      copy:
+        src: site/index.html
+        dest: /tmp/index.html
+
+    - name: Run Nginx container
+      community.docker.docker_container:
+        name: web
+        image: nginx:stable-alpine
+        ports:
+          - "80:80"
+        volumes:
+          - /tmp/index.html:/usr/share/nginx/html/index.html:ro
+        restart_policy: always
