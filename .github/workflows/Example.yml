@@ -1,4 +1,4 @@
-name: Deploy Example
+name: Test Workflow
 
 on:
   push:
@@ -9,8 +9,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Test command
+      - name: Echo message
         run: echo "Hello World"
