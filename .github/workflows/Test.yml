@@ -10,10 +10,6 @@ deploy:
 runs-on: ubuntu-latest
 
 ```
-defaults:
-  run:
-    working-directory: ./terraform
-
 steps:
   - name: Checkout repository
     uses: actions/checkout@v4
@@ -28,17 +24,21 @@ steps:
 
   - name: Terraform Init
     run: terraform init
+    working-directory: ./terraform
 
   - name: Terraform Validate
     run: terraform validate
+    working-directory: ./terraform
 
   - name: Terraform Plan
     run: terraform plan
+    working-directory: ./terraform
     env:
       TF_VAR_ssh_public_key: ${{ secrets.AZURE_KEY }}
 
   - name: Terraform Apply
     run: terraform apply -auto-approve
+    working-directory: ./terraform
     env:
       TF_VAR_ssh_public_key: ${{ secrets.AZURE_KEY }}
 
@@ -46,19 +46,16 @@ steps:
     run: |
       sudo apt update
       sudo apt install -y ansible
-    working-directory: .
 
   - name: Setup SSH key
     run: |
       mkdir -p ~/.ssh
       echo "${{ secrets.IAM_PRIVATE }}" > ~/.ssh/id_rsa
       chmod 600 ~/.ssh/id_rsa
-    working-directory: .
 
   - name: Add server to known hosts
     run: |
       ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
-    working-directory: .
 
   - name: Run Ansible Playbook
     run: |
@@ -66,5 +63,4 @@ steps:
       -i "${{ secrets.VM_HOST }}," \
       -u ${{ secrets.VM_USER }} \
       --private-key ~/.ssh/id_rsa
-    working-directory: .
 ```
