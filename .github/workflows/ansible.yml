@@ -41,3 +41,4 @@ jobs:
           -i "20.165.186.196," \
           -u ${{ secrets.VM_USER }} \
           --private-key ~/.ssh/id_rsa
+          --ssh-common-args='-o StrictHostKeyChecking=no'
