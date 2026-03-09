@@ -29,3 +29,5 @@ jobs:
           -o StrictHostKeyChecking=no \
           ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} \
           "echo SSH CONNECTION SUCCESS"
+
+          
