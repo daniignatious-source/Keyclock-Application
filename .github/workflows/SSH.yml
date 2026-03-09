@@ -1,9 +1,7 @@
 name: Test Azure SSH
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   ssh-test:
@@ -21,14 +19,11 @@ jobs:
 
       - name: Add VM to known hosts
         run: |
-          ssh-keyscan -H "20.165.186.196" >> ~/.ssh/known_hosts
+          ssh-keyscan -H 20.165.186.196 >> ~/.ssh/known_hosts
 
       - name: Test SSH connection
         run: |
           ssh -i ~/.ssh/id_rsa \
-          -o StrictHostKeyChecking=no \
-          ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} \
-          "echo SSH CONNECTION SUCCESS"
-          
-
-          
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.VM_USER }}@20.165.186.196 \
+            "echo SSH CONNECTION SUCCESS && whoami && hostname"
