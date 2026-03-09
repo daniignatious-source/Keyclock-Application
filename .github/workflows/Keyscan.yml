@@ -1,1 +1,0 @@
-ssh-keyscan -H 20.165.186.196 >> ~/.ssh/known_hosts
