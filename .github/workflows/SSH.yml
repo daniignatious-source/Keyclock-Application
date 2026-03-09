@@ -27,3 +27,5 @@ jobs:
             -o StrictHostKeyChecking=no \
             ${{ secrets.VM_USER }}@20.165.186.196 \
             "echo SSH CONNECTION SUCCESS && whoami && hostname"
+
+            
