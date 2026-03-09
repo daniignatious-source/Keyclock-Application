@@ -16,7 +16,7 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.AUTHORIZED_KEYS }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.IAM_PRIVATE }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Add VM to known hosts
