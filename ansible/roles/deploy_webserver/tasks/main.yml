@@ -1,0 +1,16 @@
+---
+- name: Pull Nginx Docker image
+  docker_image:
+    name: nginx
+    tag: "{{ webserver_image }}"
+    source: pull
+
+- name: Run Nginx web server
+  docker_container:
+    name: nginx-web
+    image: nginx:{{ webserver_image }}
+    state: started
+    published_ports:
+      - "80:80"
+    volumes:
+      - /path/to/static_website:/usr/share/nginx/html
