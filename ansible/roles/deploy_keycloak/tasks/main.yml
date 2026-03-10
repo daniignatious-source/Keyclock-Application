@@ -1,0 +1,24 @@
+---
+- name: Pull Keycloak Docker image
+  docker_image:
+    name: jboss/keycloak
+    tag: "{{ keycloak_version }}"
+    source: pull
+
+- name: Run Keycloak container
+  docker_container:
+    name: keycloak
+    image: jboss/keycloak:{{ keycloak_version }}
+    state: started
+    published_ports:
+      - "8080:8080"
+    env:
+      DB_VENDOR: "postgres"
+      DB_ADDR: "postgres"
+      DB_DATABASE: "{{ db_name }}"
+      DB_USER: "{{ db_user }}"
+      DB_PASSWORD: "{{ db_password }}"
+    depends_on:
+      - postgres
+    volumes:
+      - /opt/keycloak/data
