@@ -1,4 +1,3 @@
----
 - name: Set up the Azure VM with Docker and containers
   hosts: azure_vm
   become: true
