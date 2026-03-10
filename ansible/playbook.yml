@@ -1,89 +1,30 @@
-- name: Deploy container environment with Keycloak and Postgres
-  hosts: all
-  become: yes
-
+---
+- name: Set up the Azure VM with Docker and containers
+  hosts: azure_vm
+  become: true
   vars:
-    postgres_user: keycloak
-    postgres_password: secret
-    postgres_db: keycloak
-    keycloak_admin_user: admin
-    keycloak_admin_password: admin
+    docker_version: "20.10.7"
+    keycloak_version: "latest"
+    postgres_version: "latest"
+    webserver_image: "nginx:latest"
+    db_password: "keycloakpass"
+    db_name: "keycloak"
+    db_user: "keycloak"
+    vm_user: "azureuser"
 
   tasks:
+    - name: Install Docker
+      include_role:
+        name: setup_docker
 
-    - name: Install required packages
-      apt:
-        name:
-          - docker.io
-          - python3-pip
-        state: present
-        update_cache: yes
+    - name: Deploy PostgreSQL container
+      include_role:
+        name: deploy_postgres
 
-    - name: Install Docker Python module
-      pip:
-        name: docker
+    - name: Deploy Keycloak container
+      include_role:
+        name: deploy_keycloak
 
-    - name: Ensure Docker service is running
-      service:
-        name: docker
-        state: started
-        enabled: yes
-
-    # Create Docker network
-    - name: Create docker network
-      community.docker.docker_network:
-        name: keycloak-net
-
-    # Postgres container
-    - name: Run Postgres container
-      community.docker.docker_container:
-        name: postgres
-        image: postgres:15
-        state: started
-        restart_policy: always
-        networks:
-          - name: keycloak-net
-        env:
-          POSTGRES_USER: "{{ postgres_user }}"
-          POSTGRES_PASSWORD: "{{ postgres_password }}"
-          POSTGRES_DB: "{{ postgres_db }}"
-        ports:
-          - "5432:5432"
-
-    # Keycloak container
-    - name: Run Keycloak container
-      community.docker.docker_container:
-        name: keycloak
-        image: quay.io/keycloak/keycloak:21.0.1
-        command: start-dev
-        state: started
-        restart_policy: always
-        networks:
-          - name: keycloak-net
-        env:
-          KC_DB: postgres
-          KC_DB_URL_HOST: postgres
-          KC_DB_USERNAME: "{{ postgres_user }}"
-          KC_DB_PASSWORD: "{{ postgres_password }}"
-          KEYCLOAK_ADMIN: "{{ keycloak_admin_user }}"
-          KEYCLOAK_ADMIN_PASSWORD: "{{ keycloak_admin_password }}"
-        ports:
-          - "8080:8080"
-
-    # Copy static webpage
-    - name: Copy static webpage
-      copy:
-        src: site/index.html
-        dest: /tmp/index.html
-
-    # Nginx container
-    - name: Run Nginx container
-      community.docker.docker_container:
-        name: nginx
-        image: nginx:stable-alpine
-        state: started
-        restart_policy: always
-        ports:
-          - "80:80"
-        volumes:
-          - /tmp/index.html:/usr/share/nginx/html/index.html
+    - name: Deploy Web Server with Static Webpage
+      include_role:
+        name: deploy_webserver
