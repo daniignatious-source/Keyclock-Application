@@ -1,0 +1,20 @@
+---
+- name: Pull PostgreSQL Docker image
+  docker_image:
+    name: postgres
+    tag: "{{ postgres_version }}"
+    source: pull
+
+- name: Run PostgreSQL container
+  docker_container:
+    name: postgres
+    image: postgres:{{ postgres_version }}
+    state: started
+    published_ports:
+      - "5432:5432"
+    env:
+      POSTGRES_USER: "{{ db_user }}"
+      POSTGRES_PASSWORD: "{{ db_password }}"
+      POSTGRES_DB: "{{ db_name }}"
+    volumes:
+      - /var/lib/postgresql/data
