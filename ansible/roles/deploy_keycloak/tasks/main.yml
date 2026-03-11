@@ -1,4 +1,3 @@
----
 - name: Pull Keycloak Docker image
   docker_image:
     name: jboss/keycloak
@@ -22,5 +21,7 @@
       - postgres
     volumes:
       - /opt/keycloak/data
+
+      
 
       
