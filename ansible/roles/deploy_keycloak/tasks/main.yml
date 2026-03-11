@@ -22,3 +22,5 @@
       - postgres
     volumes:
       - /opt/keycloak/data
+
+      
