@@ -18,3 +18,5 @@
       POSTGRES_DB: "{{ db_name }}"
     volumes:
       - /var/lib/postgresql/data
+
+      
