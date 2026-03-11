@@ -1,27 +1,26 @@
 - name: Pull Keycloak Docker image
   docker_image:
-    name: jboss/keycloak
+    name: quay.io/keycloak/keycloak
     tag: "{{ keycloak_version }}"
     source: pull
 
 - name: Run Keycloak container
   docker_container:
     name: keycloak
-    image: jboss/keycloak:{{ keycloak_version }}
+    image: "quay.io/keycloak/keycloak:{{ keycloak_version }}"
     state: started
+    restart_policy: always
+    command: start-dev
     published_ports:
       - "8080:8080"
     env:
-      DB_VENDOR: "postgres"
-      DB_ADDR: "postgres"
-      DB_DATABASE: "{{ db_name }}"
-      DB_USER: "{{ db_user }}"
-      DB_PASSWORD: "{{ db_password }}"
-    depends_on:
-      - postgres
-    volumes:
-      - /opt/keycloak/data
-
-      
-
-      
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_PORT: "5432"
+      KC_DB_URL_DATABASE: "{{ db_name }}"
+      KC_DB_USERNAME: "{{ db_user }}"
+      KC_DB_PASSWORD: "{{ db_password }}"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+    networks:
+      - name: app-network
