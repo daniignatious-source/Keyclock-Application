@@ -20,5 +20,3 @@
       - "80:80"
     volumes:
       - /opt/site:/usr/share/nginx/html:ro
-
-      
